@@ -17,11 +17,11 @@ let questions = [
 
     {title: 'From the entries below, which one is an empty array?', 
     choices: [
-        'var = ()',
-        'var = []',
-        'var = {}',
-        'var = ||'],
-    answer: 'var = []'},
+        'var = ( )',
+        'var = [ ]',
+        'var = { }',
+        'var = | |'],
+    answer: 'var = [ ]'},
 
     {title: 'The DOM stands for:', 
     choices: [
