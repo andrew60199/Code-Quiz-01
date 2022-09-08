@@ -31,7 +31,7 @@ body {
     margin-bottom: 15px;
 }
 
-.timer {
+.end {
     color: orange;
     font-weight: bold;
 }
@@ -51,4 +51,9 @@ body {
     padding: 10px 20px;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.result {
+    color: orange;
+    font-weight: bold;
 }
