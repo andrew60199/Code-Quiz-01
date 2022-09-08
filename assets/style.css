@@ -1,6 +1,7 @@
 body {
     display: inline-flex;
     flex-direction: column;
+    font-family: 'Roboto', sans-serif;
 }
 
 .button {
@@ -31,5 +32,23 @@ body {
 }
 
 .timer {
-    color: blue;
+    color: orange;
+    font-weight: bold;
+}
+
+.multiple-choice:hover {
+    background-color: orange;
+}
+
+.multiple-choice:active {
+    background-color: #eeeeee;
+}
+
+
+.multiple-choice {
+    background-color: #333333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
 }

@@ -1,7 +1,5 @@
-
 const startBtn = document.querySelector(".start");
 
-// Had to move the timer into the global scope... still didnt work
 let timeLeft = 59;
 
 // Copied the first half of this funtion from the weekly activities
@@ -25,39 +23,67 @@ const countdown = () => {
         // Use `clearInterval()` to stop the timer
         clearInterval(timeInterval);
 
-
-        // Clear the buttons
-        // Call the score
+        clearQuestion();
+        displayScore();
         // Call enter in your initals 
 
       }
     }, 1000);
 
     const timerElement = document.createElement('h2');
-    
     timerElement.className = 'timer';
-
     // Couldn't get it perfect so this is my fix - add 60 here and 59 afterwards. Otherwise they would repeat
     timerElement.textContent = `60 seconds remaining`;
-
     document.body.appendChild(timerElement);    
 };
 
+const remove10 = () => {
+  timeLeft = timeLeft - 10;
+};
+
+const displayScore = () => {
+  let result = document.createElement('p');
+  result.textContent = `You ended with a score of ${score} points!`;
+  result.className = 'result';
+  document.body.appendChild(result);
+};
+
 let currentQuestionIndex = 0;
-let currentQuestion = questions[currentQuestionIndex].title;
-let questionChoice = questions[currentQuestionIndex].choices;
-let questionAnswer = questions[currentQuestionIndex].answer;
+let questionTitle;
 let choice;
+let score = 0;
 
-// Need to change this so it displays the question and the buttons for the various choices... 
+
+const clearQuestion = () => {
+  // Remove previous 
+  document.body.removeChild(questionTitle);
+  document.body.removeChild(choice);
+  // HOW TO REMOVE THE OTHER CHOICES?
+
+  nextQuestion();
+};
+
+const nextQuestion = () => {
+    currentQuestionIndex++;
+
+  if (currentQuestionIndex === questions.length) {
+    console.log(`the end`)
+    // Display 'All done!' 
+    // End timer
+    // Enter initials
+
+  } else {
+    displayQuestions()
+  }
+}
+
 const displayQuestions = () => {
+  let currentQuestion = questions[currentQuestionIndex].title;
+  let questionChoice = questions[currentQuestionIndex].choices;
     
-  const questionTitle = document.createElement('h2');
-
-  questionTitle.textContent = currentQuestion;
-
-  // Add a class
-
+  questionTitle = document.createElement('h2');
+  questionTitle.textContent = `Q${currentQuestionIndex + 1}: ${currentQuestion}`;
+  // Add a class?? Not sure if it needs it
   document.body.appendChild(questionTitle);
 
   // Display the choices
@@ -66,91 +92,44 @@ const displayQuestions = () => {
     choice.textContent = questionChoice[i];
     choice.className = 'multiple-choice';
     document.body.appendChild(choice);
-    // Event listener that 
-    choice.addEventListener('click', checkAnswer);
-  }
 
-  // checks if the answer is correct
-  // Then cycles to the next question
-  
+    choice.addEventListener('click', checkAnswer)
+  }
 };
 
-const checkAnswer = () => {
+const checkAnswer = (event) => {
+  let questionAnswer = questions[currentQuestionIndex].answer;
+  const answerReview = document.createElement('p');  
   
-    if (choice.textContent === questionAnswer) {
-    console.log('its a match')
+  if (event.target.innerText === questionAnswer) {
+    answerReview.textContent = `Correct!`;
+    document.body.appendChild(answerReview);
+    score += 10;
   } else {
-    console.log(choice.textContent)
-    console.log(questionAnswer)
-  }
-}
+    // Would be cool to display this on the screen so they know 
+    answerReview.textContent = `Not quite! You selected ${event.target.innerText}. The correct answer was ${questionAnswer}.`;
+    document.body.appendChild(answerReview);
+    remove10();
+  };
 
-// const remove10 = () => {
-//   timeLeft = timeLeft - 10;
-// };
+  // After click run a clear function 
+  clearQuestion();
+};
 
 startBtn.addEventListener(
   "click",
     () => {
-        // Call the follow functions
-        countdown();
+      startBtn.remove(); 
+      // And remove the openning text
 
-        displayQuestions();  
-        
-        startBtn.remove(); 
-        
-        // And remove the openning text
-
+      // Call the follow functions
+      countdown();
+      displayQuestions(); 
     }
 );
 
-
-
-
-
-
-
-// Test I did to make items appear on the page
-    // const buttonTrue = document.createElement('div');
-    // buttonTrue.className = 'true';
-    // const buttonFalse = document.createElement('div');
-    // buttonFalse.className = 'false';
-
-    // startBtn.remove();
-
-    // buttonTrue.textContent = `True`;
-    // buttonFalse.textContent = `False`;
-
-    // document.body.appendChild(buttonTrue);
-    // document.body.appendChild(buttonFalse);
-
-    // buttonFalse.addEventListener('click', remove10);
-
-
-
-  // Create a loop that for each choice it creates an element, assigns it a class, adds it's content to the screen and displays it 
-  // Ask for help - how to convert this into a loop...  
-
-  // const choicesListed0 = document.createElement('p');
-
-  // choicesListed0.textContent = currentQuestion.choices[0];
-
-  // document.body.appendChild(choicesListed0);
-
-  // const choicesListed1 = document.createElement('p');
-
-  // choicesListed1.textContent = currentQuestion.choices[1];
-
-  // document.body.appendChild(choicesListed1);
-
-  // const choicesListed2 = document.createElement('p');
-
-  // choicesListed2.textContent = currentQuestion.choices[2];
-
-  // document.body.appendChild(choicesListed2);
-
-  // const choicesListed3 = document.createElement('p');
-
-  // choicesListed3.textContent = currentQuestion.choices[3];
-
-  // document.body.appendChild(choicesListed3);
+// Notes to self:
+// Use this to find what you need to select. In this case it was .innerText. Since using arrows are changed in innerHTML
+// choice.addEventListener('click', checkAnswer => {
+//   console.log(checkAnswer)
+// })
