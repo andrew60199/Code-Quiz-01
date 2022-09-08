@@ -1,5 +1,11 @@
 const startBtn = document.querySelector(".start");
 
+let currentQuestionIndex = 0;
+let questionTitle;
+let choice;
+let score = 0;
+const answerReview = document.createElement('p');
+const timerElement = document.createElement('h2');
 let timeLeft = 59;
 
 // Copied the first half of this funtion from the weekly activities
@@ -22,16 +28,16 @@ const countdown = () => {
         timerElement.textContent = 'Times up!';
         // Use `clearInterval()` to stop the timer
         clearInterval(timeInterval);
-
         clearQuestion();
+        answerReview.remove();
+
         displayScore();
         // Call enter in your initals 
 
       }
     }, 1000);
 
-    const timerElement = document.createElement('h2');
-    timerElement.className = 'timer';
+    timerElement.className = 'end';
     // Couldn't get it perfect so this is my fix - add 60 here and 59 afterwards. Otherwise they would repeat
     timerElement.textContent = `60 seconds remaining`;
     document.body.appendChild(timerElement);    
@@ -48,34 +54,39 @@ const displayScore = () => {
   document.body.appendChild(result);
 };
 
-let currentQuestionIndex = 0;
-let questionTitle;
-let choice;
-let score = 0;
-
-
 const clearQuestion = () => {
-  // Remove previous 
   document.body.removeChild(questionTitle);
-  document.body.removeChild(choice);
-  // HOW TO REMOVE THE OTHER CHOICES?
 
-  nextQuestion();
+  var multipleChoice = document.querySelectorAll(".multiple-choice");
+  for (let i = 0; i < multipleChoice.length; i++) {
+    multipleChoice[i].remove();
+  };
 };
 
 const nextQuestion = () => {
-    currentQuestionIndex++;
+  clearQuestion();
+
+  currentQuestionIndex++;
 
   if (currentQuestionIndex === questions.length) {
     console.log(`the end`)
     // Display 'All done!' 
     // End timer
+    timerElement.remove();
+    answerReview.remove();
+    
+    const allDone = document.createElement('h2');
+    allDone.textContent = `All Done!`;
+    allDone.className = 'end';
+    document.body.appendChild(allDone);
+    displayScore();
     // Enter initials
 
   } else {
     displayQuestions()
   }
-}
+
+};
 
 const displayQuestions = () => {
   let currentQuestion = questions[currentQuestionIndex].title;
@@ -99,21 +110,22 @@ const displayQuestions = () => {
 
 const checkAnswer = (event) => {
   let questionAnswer = questions[currentQuestionIndex].answer;
-  const answerReview = document.createElement('p');  
-  
+    
   if (event.target.innerText === questionAnswer) {
     answerReview.textContent = `Correct!`;
+    answerReview.className = 'review';
     document.body.appendChild(answerReview);
     score += 10;
   } else {
     // Would be cool to display this on the screen so they know 
     answerReview.textContent = `Not quite! You selected ${event.target.innerText}. The correct answer was ${questionAnswer}.`;
+    answerReview.className = 'review';
     document.body.appendChild(answerReview);
     remove10();
   };
 
   // After click run a clear function 
-  clearQuestion();
+  nextQuestion();
 };
 
 startBtn.addEventListener(
