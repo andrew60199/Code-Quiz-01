@@ -11,31 +11,31 @@ let timeLeft = 59;
 // Copied the first half of this funtion from the weekly activities
 const countdown = () => {
       
-    // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-    const timeInterval = setInterval(function () {
-      // As long as the `timeLeft` is greater than 1
-      if (timeLeft > 1) {
-        // Set the `textContent` of `timerElement` to show the remaining seconds
-        timerElement.textContent = timeLeft + ' seconds remaining';
-        // Decrement `timeLeft` by 1
-        timeLeft--;
-      } else if (timeLeft === 1) {
-        // When `timeLeft` is equal to 1, rename to 'second' instead of 'seconds'
-        timerElement.textContent = timeLeft + ' second remaining';
-        timeLeft--;
-      } else {
-        // Once `timeLeft` gets to 0, set `timerElement` to display one of two end messages based on the outcome
-        timerElement.textContent = 'Times up!';
-        // Use `clearInterval()` to stop the timer
-        clearInterval(timeInterval);
-        clearQuestion();
-        answerReview.remove();
+  // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
+  const timeInterval = setInterval(function () {
+    // As long as the `timeLeft` is greater than 1
+    if (timeLeft > 1) {
+      // Set the `textContent` of `timerElement` to show the remaining seconds
+      timerElement.textContent = timeLeft + ' seconds remaining';
+      // Decrement `timeLeft` by 1
+      timeLeft--;
+    } else if (timeLeft === 1) {
+      // When `timeLeft` is equal to 1, rename to 'second' instead of 'seconds'
+      timerElement.textContent = timeLeft + ' second remaining';
+      timeLeft--;
+    } else {
+      // Once `timeLeft` gets to 0, set `timerElement` to display one of two end messages based on the outcome
+      timerElement.textContent = 'Times up!';
+      // Use `clearInterval()` to stop the timer
+      clearInterval(timeInterval);
+      clearQuestion();
+      answerReview.remove();
 
-        displayScore();
-        // Call enter in your initals 
+      displayScore();
+      saveHighScore(); 
 
-      }
-    }, 1000);
+    }
+  }, 1000);
 
     timerElement.className = 'end';
     // Couldn't get it perfect so this is my fix - add 60 here and 59 afterwards. Otherwise they would repeat
@@ -57,7 +57,7 @@ const displayScore = () => {
 const clearQuestion = () => {
   document.body.removeChild(questionTitle);
 
-  var multipleChoice = document.querySelectorAll(".multiple-choice");
+  let multipleChoice = document.querySelectorAll(".multiple-choice");
   for (let i = 0; i < multipleChoice.length; i++) {
     multipleChoice[i].remove();
   };
@@ -69,23 +69,18 @@ const nextQuestion = () => {
   currentQuestionIndex++;
 
   if (currentQuestionIndex === questions.length) {
-    console.log(`the end`)
-    // Display 'All done!' 
-    // End timer
     timerElement.remove();
-    answerReview.remove();
     
     const allDone = document.createElement('h2');
     allDone.textContent = `All Done!`;
     allDone.className = 'end';
     document.body.appendChild(allDone);
     displayScore();
-    // Enter initials
+    saveHighScore();
 
   } else {
     displayQuestions()
   }
-
 };
 
 const displayQuestions = () => {
@@ -124,9 +119,42 @@ const checkAnswer = (event) => {
     remove10();
   };
 
-  // After click run a clear function 
   nextQuestion();
 };
+
+const initialsForm = document.createElement('input');
+
+const saveHighScore = () => {
+  const initialsPrompt = document.createElement('p');
+  initialsPrompt.textContent = `Enter your initials:`;
+  document.body.appendChild(initialsPrompt);
+
+  document.body.appendChild(initialsForm);
+
+  const submit = document.createElement('button');
+  submit.textContent = `Submit`;
+  document.body.appendChild(submit);
+  submit.addEventListener('click', submitHighScore)
+
+}
+
+const submitHighScore = () => {
+  let gamePlayed = {
+    Initials: initialsForm.value,
+    Score: score,
+  };
+
+  // How to do we log multiple highscore values to call upon in the highscores screen
+
+  if (initialsForm.value === '') {
+    window.alert(`Initials cannot be blank`)
+  }
+
+  localStorage.setItem("gamePlayed", JSON.stringify(gamePlayed));
+
+  window.location.href = "./assets/highscores.html";
+
+}
 
 startBtn.addEventListener(
   "click",
